@@ -6,47 +6,42 @@ export default createStore({
     users: []
   },
   getters: {
-    allUser(state){
+    allPosts(state){
+      return state.posts
+    },
+    allUsers(state){
       return state.users
     },
-    allPost(state){
-        return state.posts
-    },
-    postByUser(state,id){
-      return  [...state.posts].filter((a => a.userId == id ));
+    postByUser: (state) => (Id) =>{
+      return state.posts.filter((p) => p.userId == Id)
+      
     }
   },
   mutations: {
-    Set_POST(state,posts){
+    SET_POSTS(state, posts){
       state.posts = posts
     },
-    Set_USERS(state,users){
+    SET_USERS(state, users){
       state.users = users
     }
   },
   actions: {
     async getPosts({commit}){
-      try {
-          let respo = await fetch("https://jsonplaceholder.typicode.com/posts")
-          let datos = await respo.json()
-
-          commit("Set_POST",datos)
-        }
-        catch(error){
-            console.log(error);
-  
-        }
+      try{
+        let resp = await fetch('http://jsonplaceholder.typicode.com/posts')
+        let data = await resp.json()
+        commit('SET_POSTS', data)
+      }catch(error){
+        console.log('Error al solicitar los posts', error)
+      }
     },
     async getUsers({commit}){
-      try {
-        let respo = await fetch("https://jsonplaceholder.typicode.com/users")
-        let datos = await respo.json()
-
-        commit("Set_USERS",datos)
-      }
-      catch(error){
-          console.log(error);
-
+      try{
+        let resu = await fetch('http://jsonplaceholder.typicode.com/users')
+        let users = await resu.json()
+        commit('SET_USERS', users)
+      }catch(error){
+        console.log('Error al solicitar los users', error)
       }
     }
   },
